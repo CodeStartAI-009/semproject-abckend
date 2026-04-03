@@ -21,7 +21,10 @@ def create_app():
     return app
 
 
-# 🚀 Run Server
+# 🔥 VERY IMPORTANT (FIX FOR RENDER / GUNICORN)
+app = create_app()
+
+
+# 🚀 Run locally
 if __name__ == "__main__":
-    app = create_app()
     app.run(host="0.0.0.0", port=5001, debug=True)
