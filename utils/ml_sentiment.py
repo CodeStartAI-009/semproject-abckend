@@ -29,7 +29,7 @@ def clean_text(text):
     return text
 
 
-# 🔥 Sentiment Prediction (WITH NEUTRAL SUPPORT)
+# 🔥 Sentiment Prediction (FINAL FIXED VERSION)
 def predict_sentiment(text):
     if not text:
         return "neutral"
@@ -66,20 +66,32 @@ def predict_sentiment(text):
             "passable", "just okay", "alright"
         ]
 
-        # 🔥 SCORE-BASED APPROACH (BETTER)
+        # 🔥 SCORE CALCULATION
         pos_score = sum(1 for word in positive_words if word in cleaned)
         neg_score = sum(1 for word in negative_words if word in cleaned)
         neu_score = sum(1 for word in neutral_words if word in cleaned)
 
-        # 🔥 DECISION LOGIC
-        if pos_score > neg_score and pos_score > neu_score:
-            return "positive"
+        total_score = pos_score + neg_score + neu_score
 
-        if neg_score > pos_score and neg_score > neu_score:
-            return "negative"
+        # 🚫 No keyword → ML fallback
+        if total_score == 0:
+            pass
+        else:
+            # 🔥 STRONG POSITIVE
+            if pos_score >= 2 and pos_score > neg_score:
+                return "positive"
 
-        if neu_score > 0:
-            return "neutral"
+            # 🔥 STRONG NEGATIVE
+            if neg_score >= 2 and neg_score > pos_score:
+                return "negative"
+
+            # 🔥 NEUTRAL (KEY FIX)
+            if neu_score >= 1:
+                return "neutral"
+
+            # 🔥 MIXED CASE
+            if pos_score == neg_score:
+                return "neutral"
 
         # 🔥 LONG TEXT fallback
         if len(words) > 40:
@@ -117,7 +129,7 @@ def predict_fake_review(text):
     if len(words) > 30:
         return False
 
-    # 🚫 Repetitive
+    # 🚫 Repetitive text
     if len(set(words)) / len(words) < 0.3:
         return True
 
