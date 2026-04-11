@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()   # 🔥 MUST BE FIRST (loads .env variables)
+
 from flask import Flask
 from flask_cors import CORS
 
@@ -21,7 +24,7 @@ def create_app():
     return app
 
 
-# 🔥 VERY IMPORTANT (FIX FOR RENDER / GUNICORN)
+# 🔥 IMPORTANT: global app for gunicorn (Render)
 app = create_app()
 
 
